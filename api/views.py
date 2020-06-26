@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from .models import Task
 from .serializers import TaskSerializer
 
+from rest_framework import mixins, generics
+
 # Create your views here.
 @api_view(['GET'])
 def apiOverview(request):
@@ -20,48 +22,77 @@ def apiOverview(request):
 
     return Response(api_urls)
 
-@api_view(['GET'])
-def taskList(request):
-    tasks = Task.objects.all()
-    json = TaskSerializer(tasks, many=True)
+# @api_view(['GET'])
+# def taskList(request):
+#     tasks = Task.objects.all()
+#     json = TaskSerializer(tasks, many=True)
 
-    return Response(json.data)
+#     return Response(json.data)
 
-@api_view(['GET'])
-def taskDetail(request, pk):
-    task = Task.objects.get(id=pk)
-    json = TaskSerializer(task, many=False)
+class TaskList(generics.ListAPIView): 
+    queryset = Task.objects.all();      # can be modified by get_queryset method
+    serializer_class = TaskSerializer   # can be modified by get_serializer_class method
 
-    return Response(json.data)
+    # def get(self, request, *args, **kwargs):
+    #     return self.list(request, *args, **kwargs)
 
-@api_view(['POST'])
-def taskCreate(request):
-# normal request contains instance but api request contains data
 
-    json = TaskSerializer(data = request.data)
-    # just like forms
-    if json.is_valid():
-        json.save()
 
-    # automatically generates the views, put the json string in the content field, duplicate ids are handled automatically
-    return Response(json.data)
+# @api_view(['GET'])
+# def taskDetail(request, pk):
+#     task = Task.objects.get(id=pk)
+#     json = TaskSerializer(task, many=False)
 
-@api_view(['POST'])
-def taskUpdate(request, pk):
-    task = Task.objects.get(id=pk)
-    json = TaskSerializer(instance=task, data=request.data)
+#     return Response(json.data)
 
-    if json.is_valid():
-        json.save()
 
-    return Response(json.data)  
+class TaskDetail(generics.RetrieveAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
 
-@api_view(['DELETE'])
-def taskDelete(request, pk):
-    try:
-        task = Task.objects.get(id=pk)
-        task.delete()
-    except:
-        return Response("Item does not exist!")
 
-    return Response("Item deleted")  
+# @api_view(['POST'])
+# def taskCreate(request):
+# # normal request contains instance but api request contains data
+
+#     json = TaskSerializer(data = request.data)
+#     # just like forms
+#     if json.is_valid():
+#         json.save()
+
+#     # automatically generates the views, put the json string in the content field, duplicate ids are handled automatically
+#     return Response(json.data)
+
+class TaskCreate(generics.CreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
+# @api_view(['POST'])
+# def taskUpdate(request, pk):
+#     task = Task.objects.get(id=pk)
+#     json = TaskSerializer(instance=task, data=request.data)
+
+#     if json.is_valid():
+#         json.save()
+
+#     return Response(json.data)  
+
+class TaskUpdate(generics.UpdateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
+# @api_view(['DELETE'])
+# def taskDelete(request, pk):
+#     try:
+#         task = Task.objects.get(id=pk)
+#         task.delete()
+#     except:
+#         return Response("Item does not exist!")
+
+#     return Response("Item deleted")  
+
+class TaskDelete(generics.DestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
