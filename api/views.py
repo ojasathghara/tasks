@@ -9,6 +9,7 @@ from .serializers import TaskSerializer
 from rest_framework import mixins, generics
 
 # Create your views here.
+# function based views
 @api_view(['GET'])
 def apiOverview(request):
     
@@ -22,6 +23,7 @@ def apiOverview(request):
 
     return Response(api_urls)
 
+
 # @api_view(['GET'])
 # def taskList(request):
 #     tasks = Task.objects.all()
@@ -29,13 +31,9 @@ def apiOverview(request):
 
 #     return Response(json.data)
 
-class TaskList(generics.ListAPIView): 
-    queryset = Task.objects.all();      # can be modified by get_queryset method
-    serializer_class = TaskSerializer   # can be modified by get_serializer_class method
 
     # def get(self, request, *args, **kwargs):
     #     return self.list(request, *args, **kwargs)
-
 
 
 # @api_view(['GET'])
@@ -44,12 +42,6 @@ class TaskList(generics.ListAPIView):
 #     json = TaskSerializer(task, many=False)
 
 #     return Response(json.data)
-
-
-class TaskDetail(generics.RetrieveAPIView):
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-
 
 # @api_view(['POST'])
 # def taskCreate(request):
@@ -63,10 +55,6 @@ class TaskDetail(generics.RetrieveAPIView):
 #     # automatically generates the views, put the json string in the content field, duplicate ids are handled automatically
 #     return Response(json.data)
 
-class TaskCreate(generics.CreateAPIView):
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-
 
 # @api_view(['POST'])
 # def taskUpdate(request, pk):
@@ -78,10 +66,6 @@ class TaskCreate(generics.CreateAPIView):
 
 #     return Response(json.data)  
 
-class TaskUpdate(generics.UpdateAPIView):
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-
 
 # @api_view(['DELETE'])
 # def taskDelete(request, pk):
@@ -92,6 +76,24 @@ class TaskUpdate(generics.UpdateAPIView):
 #         return Response("Item does not exist!")
 
 #     return Response("Item deleted")  
+
+
+# class based views
+class TaskList(generics.ListAPIView): 
+    queryset = Task.objects.all();      # can be modified by get_queryset method
+    serializer_class = TaskSerializer   # can be modified by get_serializer_class method
+
+class TaskDetail(generics.RetrieveAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+class TaskCreate(generics.CreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+class TaskUpdate(generics.UpdateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
 
 class TaskDelete(generics.DestroyAPIView):
     queryset = Task.objects.all()
