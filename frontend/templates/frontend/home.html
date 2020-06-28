@@ -1,26 +1,25 @@
 {% extends 'frontend/base.html' %}
 
-
 {% block content %}
     <div class="container">
         <div id="task-container">
-			<div id="form-wrapper">
-				<form id="form">
-					<div class="row">
-						<div class="col-10">
-							<input id="title" class="form-control" type="text" name="title" placeholder="Add task">
-						</div>
-						<div class="col-2 mr-auto">
-							<input id="submit" class="btn" type="submit" >
-						</div>
-					</div>
-				</form>
-			</div>
+            <div id="form-wrapper">
+                <form id="form">
+                    <div class="flex-wrapper">
+                        <div style="flex: 5">
+                            <input id="title" class="form-control" type="text" name="title" placeholder="Add task">
+                        </div>
+                        <div style="flex: 1;" class="ml-3">
+                            <input id="submit" class="btn" type="submit" >
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-			<div id="list-wrapper">
-			
-			</div>	
-		</div>
+            <div id="list-wrapper">
+            
+            </div>	
+        </div>
     </div>
 {% endblock content %}
     
