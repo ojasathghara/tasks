@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -14,9 +15,9 @@ from rest_framework import mixins, generics
 def apiOverview(request):
     
     api_urls = {
-        'List':'/task-list/',
+        'List':'http://localhost:8000/api/task-list/',
         'Detail View':'/task-detail/<str:pk>/',
-        'Create':'/task-create/',
+        'Create':'http://localhost:8000/api/task-create/',
         'Update':'/task-update/<str:pk>/',
         'Delete':'/task-delete/<str:pk>/',
     }
@@ -80,8 +81,12 @@ def apiOverview(request):
 
 # class based views
 class TaskList(generics.ListAPIView): 
-    queryset = Task.objects.all();      # can be modified by get_queryset method
+    # queryset = Task.objects.all();      # can be modified by get_queryset method
     serializer_class = TaskSerializer   # can be modified by get_serializer_class method
+
+    def get_queryset(self, *args, **kwargs):
+        return Task.objects.all().order_by('-id')
+
 
 class TaskDetail(generics.RetrieveAPIView):
     queryset = Task.objects.all()
@@ -94,6 +99,8 @@ class TaskCreate(generics.CreateAPIView):
 class TaskUpdate(generics.UpdateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+        
 
 class TaskDelete(generics.DestroyAPIView):
     queryset = Task.objects.all()
