@@ -17,12 +17,40 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
+// global variables
 var activeItem = null;  // to get the item selected
+var wrapper = document.getElementById('list-wrapper');
 
+// a function to genarate individual list item
+function genarateListItem(item) {
+
+    let title = `${item.title}`
+
+    if (item.completed === true) {    
+        title = `<strike>${item.title}</strike>`
+    }
+
+    let task = `
+        <div id="data-row-${item.id}" class="task-wrapper flex-wrapper">
+                
+            <div style="flex:7" class="title">
+                ${title}
+            </div>
+            <div style="flex:1">
+                <button class="btn btn-sm btn-outline-info edit">Edit </button>
+            </div>
+            <div style="flex:1">
+                <button class="btn btn-sm btn-danger delete">X</button>
+            </div>
+        </div>
+    `
+
+    return task;
+}
 
 // building list and adding event listeners to individual items
 buildList = () => {
-    let wrapper = document.getElementById('list-wrapper');
+    
     let url = 'http://localhost:8000/api/task-list/';
     wrapper.innerHTML = '';
 
@@ -34,33 +62,8 @@ buildList = () => {
         let list = data;
 
         list.forEach((item) => {
-
-            let title_div = `
-                        <div style="flex:7" class="title">
-                            ${item.title}
-                        </div>
-                    `
-            if (item.completed === true) {
-                title_div = `
-                    <div style="flex:7" class="title">
-                        <strike>${item.title}</strike>
-                    </div>
-                `
-            }
             
-
-            let task = `
-                <div id="data-row-${item.id}" class="task-wrapper flex-wrapper">
-                    ${title_div}
-                    <div style="flex:1">
-                        <button class="btn btn-sm btn-outline-info edit">Edit </button>
-                    </div>
-                    <div style="flex:1">
-                        <button class="btn btn-sm btn-outline-dark delete">-</button>
-                    </div>
-                </div>
-            `
-
+            let task = genarateListItem(item);
             wrapper.innerHTML += task;
         })
 
@@ -186,6 +189,7 @@ strikeUnstrike = (item) => {
         body:JSON.stringify({'id': item.id, 'title': item.title, 'completed': completedStatus})
     })
     .then((response) => {
+
         buildList();
     })
 }
